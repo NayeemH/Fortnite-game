@@ -45,7 +45,7 @@ public class Login : MonoBehaviourPunCallbacks
     void Update()
     {
         //connectionStatusText.text = "Connection status: " + PhotonNetwork.NetworkClientState;
-        Debug.Log("Connection Status: "+ PhotonNetwork.NetworkClientState);
+        //Debug.Log("Connection Status: "+ PhotonNetwork.NetworkClientState);
     }
     #region public methods
     public void SetPlayerName(string playername) ///making a public class for player input section
@@ -61,8 +61,13 @@ public class Login : MonoBehaviourPunCallbacks
     public void OnClickEnterGameJoinRandomRoom() ///function for joinning random room when Enter Game is Clicked
     {
         
-       
+       if(PhotonNetwork.IsConnectedAndReady)
         PhotonNetwork.JoinRandomRoom();
+
+       else
+        {
+            Debug.Log("Please Connect to Master Server");
+        }
         connectionPanel.SetActive(true);
     }
 
@@ -105,7 +110,13 @@ public class Login : MonoBehaviourPunCallbacks
         string gameid = usernameInputFieldLogin.text;
         string password = passwordInputFieldLogin.text;
 
-        if (gameid.Length > 24)
+        if (gameid == gameid)
+        {
+            OnClickEnterGameJoinRandomRoom();
+            yield return 0;
+        }
+
+       /* if (gameid.Length > 24)
         {
             alertTextLogIn.text = "Invalid username";
            // ActivateButtons(true);
@@ -178,7 +189,7 @@ public class Login : MonoBehaviourPunCallbacks
         }
 
 
-        yield return null;
+        yield return null;*/
     }
 
     private IEnumerator TryCreate()
@@ -287,6 +298,12 @@ public class Login : MonoBehaviourPunCallbacks
 
         PhotonNetwork.LoadLevel("RoomScene");/// this will load another scene
     }
+
+    public override void OnConnectedToMaster()
+    {
+        Debug.Log("Connected to Maseter Server!");
+    }
+
     #endregion
 
 }
